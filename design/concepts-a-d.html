@@ -1,0 +1,483 @@
+<title>Prostir Dashboard Concepts</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=Roboto:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&family=Unbounded:wght@500;600;700&family=Golos+Text:wght@400;500;600&display=swap">
+<style>
+/* Layout: page = tab strip + description + horizontal strip of phone mockups. Each phone carries its own palette (single-look by design). */
+:root{
+  --bg:#F2F4F5; --fg:#14202A; --muted:#5A6874; --line:#D9DFE3; --card:#FFFFFF; --accent:#1D3A56; --on-accent:#fff;
+  --font:'Onest',system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --bg:#0F1519; --fg:#E6ECF0; --muted:#97A5B0; --line:#26323B; --card:#172026; --accent:#9CC3E8; --on-accent:#0F1519; color-scheme:dark } }
+:root[data-theme="dark"]{ --bg:#0F1519; --fg:#E6ECF0; --muted:#97A5B0; --line:#26323B; --card:#172026; --accent:#9CC3E8; --on-accent:#0F1519; color-scheme:dark }
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);padding-block:28px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));line-height:1.5}
+.wrap{max-width:1280px;margin:0 auto}
+h1{font-size:clamp(24px,4vw,34px);line-height:1.15;margin:0 0 8px;font-weight:650;text-wrap:balance;letter-spacing:-.01em}
+.lead{color:var(--muted);max-width:68ch;margin:0 0 22px;font-size:15px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+.tabs button{font:inherit;font-size:14px;font-weight:500;padding:9px 15px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--fg);cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.tabs button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.vhead{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr) minmax(0,1fr);gap:24px;margin-bottom:26px}
+.vhead h2{font-size:22px;margin:0 0 6px;font-weight:650}
+.vhead p{margin:0;color:var(--muted);font-size:14.5px;max-width:60ch}
+.vhead h3{font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin:0 0 6px;font-weight:600}
+.vhead ul{margin:0;padding-left:18px;font-size:14.5px}
+.vhead li{margin-bottom:4px}
+@media (max-width:900px){.vhead{grid-template-columns:1fr;gap:16px}}
+.strip{display:flex;gap:28px;overflow-x:auto;padding:6px 4px 22px;align-items:flex-start}
+.fig{margin:0;flex:0 0 auto}
+.fig figcaption{font-size:13px;color:var(--muted);text-align:center;margin-top:10px;font-weight:500}
+.notes{margin-top:30px;border-top:1px solid var(--line);padding-top:22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+.notes h3{margin:0 0 6px;font-size:15px}
+.notes p{margin:0;color:var(--muted);font-size:14px}
+
+/* ---------- phone frame ---------- */
+.phone{width:360px;height:740px;border:7px solid #14171A;border-radius:44px;box-sizing:content-box;display:flex;flex-direction:column;overflow:hidden;position:relative;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:14px;line-height:1.35;box-shadow:0 0 0 1px rgba(128,128,128,.35),0 18px 40px -22px rgba(0,0,0,.45)}
+.phone *{box-sizing:border-box}
+.sb{height:30px;flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-size:12px;font-weight:500;color:var(--ink)}
+.sb i{display:inline-block;width:14px;height:8px;border-radius:2px;background:var(--ink);opacity:.8;margin-left:5px}
+.sb i+i{width:20px}
+.body{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;padding:6px 16px 18px;display:flex;flex-direction:column;gap:12px}
+.body::-webkit-scrollbar{display:none}
+.ic{flex:0 0 auto}
+.appbar{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:44px}
+.ttl{font-family:var(--dfont,var(--font));font-size:22px;font-weight:600;line-height:1.15;letter-spacing:-.01em}
+.sub{font-size:12.5px;color:var(--muted)}
+.lbl{font-size:12px;color:var(--muted);font-weight:500}
+.ibtn{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--surface2);color:var(--ink)}
+.card{background:var(--surface);border-radius:var(--r);padding:14px;border:var(--cardb);min-width:0}
+.cardh{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:8px;font-weight:600;font-size:14px}
+.cardh span{font-weight:400;font-size:12px;color:var(--muted)}
+.row{display:flex;align-items:center;gap:12px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.big{font-family:var(--dfont,var(--font));font-size:52px;font-weight:600;line-height:1;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:500;background:var(--accent-soft);color:var(--accent-ink);white-space:nowrap}
+.chip.good{background:var(--good-soft);color:var(--good)}
+.chip.warn{background:var(--warn-soft);color:var(--warn)}
+.chip.bad{background:var(--bad-soft);color:var(--bad)}
+.chip.mute{background:var(--surface2);color:var(--muted)}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;height:48px;border-radius:calc(var(--r) - 4px);background:var(--accent);color:var(--on-accent);font-weight:600;font-size:15px;border:0;font-family:inherit}
+.btn.ghost{background:var(--surface2);color:var(--ink)}
+.btn.sm{height:38px;font-size:13.5px;padding:0 14px}
+.seg{display:flex;background:var(--surface2);border-radius:999px;padding:3px;gap:2px}
+.seg b{flex:1;text-align:center;padding:7px 4px;border-radius:999px;font-size:13px;font-weight:500;color:var(--muted);white-space:nowrap}
+.seg b.on{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.18)}
+.sel{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.sel .m{font-family:var(--dfont,var(--font));font-weight:600;font-size:18px}
+.sel .ar{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--surface2)}
+.yrs{display:flex;gap:6px;flex-wrap:wrap}
+.yr{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:999px;border:1px solid var(--line);font-size:13px;font-weight:500;background:var(--surface)}
+.yr i{width:10px;height:10px;border-radius:50%;display:block}
+.yr.off{opacity:.5}
+.sum{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.sum div{background:var(--surface);border:var(--cardb);border-radius:calc(var(--r) - 6px);padding:9px 10px;min-width:0}
+.sum small{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.sum small i{width:9px;height:9px;border-radius:50%;display:block}
+.sum b{font-size:20px;font-weight:600;font-variant-numeric:tabular-nums;font-family:var(--dfont,var(--font))}
+.sum em{font-style:normal;font-size:11px;color:var(--muted);display:block}
+.chart{display:block;overflow:visible}
+.chart .grid{stroke:var(--line);stroke-width:1}
+.chart .ax{fill:var(--muted);font-size:10px;font-family:var(--font);font-variant-numeric:tabular-nums}
+.chart .vl{fill:var(--ink);font-size:11px;font-weight:600;font-family:var(--font)}
+.chart .today{stroke:var(--muted);stroke-width:1;stroke-dasharray:3 3}
+.chart .ln{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.chart .s2026{stroke:var(--y26);stroke-width:3}
+.chart .s2025{stroke:var(--y25)}
+.chart .s2024{stroke:var(--y24)}
+.vC .chart .s2024{stroke-dasharray:4 4}
+.chart .dot{fill:var(--y26);stroke:var(--surface);stroke-width:2}
+.chart .bar{fill:var(--accent)}
+.chart .barp{fill:var(--accent);opacity:.35}
+.chart .tick{stroke:var(--ink);stroke-width:2;stroke-linecap:round}
+.vD .chart .bar{fill:var(--y26)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:8px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{display:block;width:14px;height:3px;border-radius:2px}
+.legend i.sq{width:10px;height:10px;border-radius:3px}
+.tbl{width:100%;border-collapse:separate;border-spacing:2px;font-variant-numeric:tabular-nums;table-layout:fixed}
+.tbl th{font-size:11px;color:var(--muted);font-weight:500;text-align:center;padding:4px 0;white-space:nowrap}
+.tbl th:first-child,.tbl td.d{text-align:left;width:56px}
+.tbl td{height:27px;text-align:center;font-size:12.5px;border-radius:6px;color:var(--ink)}
+.tbl td.d{color:var(--muted);font-size:12px;background:none;border-radius:0}
+.tbl td.hot{color:var(--on-h1)}
+.tbl td.nil{color:var(--muted);background:var(--surface2);opacity:.7}
+.tbl tr.tot td{font-weight:700;height:32px}
+.tbl tr.tot td.d{color:var(--ink);font-weight:600}
+.tbl tr.now td.d{color:var(--ink);font-weight:600}
+.tbl th .hb{display:inline-grid;place-items:center;width:16px;height:16px;border-radius:50%;color:#fff;font-size:10px;font-weight:700;margin-right:3px}
+.bar-row{display:grid;grid-template-columns:64px 1fr 36px;gap:10px;align-items:center;font-size:13px;margin-top:9px}
+.bar-row .t{height:8px;border-radius:4px;background:var(--surface2);overflow:hidden}
+.bar-row .t i{display:block;height:100%;border-radius:4px;background:var(--accent)}
+.bar-row b{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.foot{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;justify-content:center;padding-top:2px}
+.foot i{width:7px;height:7px;border-radius:50%;background:var(--good);display:block}
+/* nav */
+.nav{flex:0 0 auto}
+.navA{display:flex;background:var(--surface2);padding:10px 8px 14px}
+.navA a{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:500;color:var(--muted)}
+.navA a span{height:30px;width:60px;border-radius:15px;display:grid;place-items:center}
+.navA a.on{color:var(--ink)}
+.navA a.on span{background:var(--accent-soft);color:var(--accent-ink)}
+.navB{display:flex;border-top:1px solid var(--line);background:var(--surface);padding:6px 4px 12px}
+.navB a{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;padding-top:8px;color:var(--muted);position:relative}
+.navB a.on{color:var(--accent)}
+.navB a.on::before{content:"";position:absolute;top:-7px;left:26%;right:26%;height:2px;background:var(--accent);border-radius:2px}
+.navD{margin:0 14px 14px;background:var(--accent);border-radius:26px;padding:6px;display:flex;gap:4px}
+.navD a{flex:1;height:44px;border-radius:20px;display:flex;align-items:center;justify-content:center;gap:6px;color:rgba(255,255,255,.7);font-size:13px;font-weight:500}
+.navD a.on{background:#fff;color:var(--accent);flex:2.2}
+.navD a:not(.on) b{display:none}
+.topC{padding:2px 16px 0;display:flex;flex-direction:column;gap:10px}
+.topC .wm{display:flex;justify-content:space-between;align-items:center;font-family:var(--dfont);font-size:13px;font-weight:600;letter-spacing:.02em}
+.topC .seg{background:var(--surface2)}
+/* arrivals */
+.rc{background:var(--surface);border:var(--cardb);border-radius:var(--r);padding:13px;display:flex;flex-direction:column;gap:9px;min-width:0}
+.rc .t1{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tag{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px}
+.tag.in{background:var(--accent-soft);color:var(--accent-ink)}
+.tag.out{background:var(--surface2);color:var(--ink)}
+.hn{font-weight:600;font-size:16px}
+.hb{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;color:#fff;font-size:11px;font-weight:700}
+.hb.h1{background:var(--hs1,var(--accent))}.hb.h2{background:var(--hs2,var(--accent))}.hb.h3{background:var(--hs3,var(--accent))}.hb.h4{background:var(--hs4,var(--accent))}
+.th .hb.h1,.th .hb.h2,.th .hb.h3,.th .hb.h4{color:#fff}
+.vA .hb,.vB .hb,.vC .hb{background:var(--surface2);color:var(--ink)}
+.rc .dt{display:flex;gap:14px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.rc .dt b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+.rc .who{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.rc .who div{min-width:0}
+.rc .who strong{display:block;font-weight:600}
+.rc .who span{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.call{display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 14px;border-radius:20px;background:var(--accent);color:var(--on-accent);font-weight:600;font-size:13px;flex:0 0 auto}
+.cm{font-size:13px;border-radius:10px;padding:8px 10px;background:var(--surface2)}
+.cm small{display:block;font-size:11px;color:var(--muted);font-weight:500;margin-bottom:1px}
+.cm.adm{background:var(--accent-soft)}
+.cm.adm small{color:var(--accent-ink)}
+.due{display:flex;align-items:center;gap:8px;background:var(--warn-soft);color:var(--warn);border-radius:10px;padding:8px 10px;font-size:13px;font-weight:500}
+.dense{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface);border:var(--cardb);border-radius:var(--r)}
+.dense .a{flex:1;min-width:0}
+.dense .a b{display:block;font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dense .a span{font-size:12px;color:var(--muted)}
+.day{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-top:4px}
+/* states */
+.sk{background:linear-gradient(90deg,var(--surface2),var(--line),var(--surface2));background-size:200% 100%;animation:sh 1.5s linear infinite;border-radius:8px}
+@keyframes sh{to{background-position:-200% 0}}
+@media (prefers-reduced-motion:reduce){.sk{animation:none}.spin{animation:none!important}}
+.spin{animation:rot 1s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+.stl{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600;margin:6px 0 -4px}
+.center{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;padding:6px 4px}
+.center .ibtn{width:48px;height:48px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:12.5px;color:var(--muted);font-weight:500}
+.inp{height:50px;border-radius:calc(var(--r) - 8px);border:1.5px solid var(--line);background:var(--surface);display:flex;align-items:center;justify-content:space-between;padding:0 14px;font-size:15px}
+.inp.err{border-color:var(--bad)}
+.inp small{color:var(--accent-ink);font-size:12.5px;font-weight:500}
+.errmsg{font-size:12.5px;color:var(--bad);display:flex;gap:6px;align-items:center}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--dfont,var(--font));font-weight:700;font-size:22px;letter-spacing:-.01em}
+.mark{width:40px;height:40px;border-radius:12px;background:var(--accent);display:grid;place-items:center}
+/* variant tokens */
+.vA{--font:'Roboto',system-ui,sans-serif;--bg:#F5F8F4;--surface:#FFFFFF;--surface2:#E8EEE8;--ink:#18271F;--muted:#5C6B62;--line:#D8E1D9;--accent:#1F6F54;--accent-soft:#D3ECDF;--accent-ink:#0F4A37;--on-accent:#FFFFFF;--good:#1B7547;--good-soft:#D8F0E2;--warn:#9A4A0B;--warn-soft:#FBE6D2;--bad:#B3261E;--bad-soft:#FAE0DD;--y26:#1F6F54;--y25:#3B82C4;--y24:#D08A2E;--h0:#EDF4EE;--h1:#1F6F54;--on-h1:#fff;--r:22px;--cardb:1px solid var(--line)}
+.vB{--font:'IBM Plex Sans',system-ui,sans-serif;--bg:#0D1115;--surface:#151B21;--surface2:#1E2730;--ink:#E7ECF0;--muted:#8E9BA7;--line:#27313B;--accent:#F2B84B;--accent-soft:#3A2F17;--accent-ink:#F7CE7E;--on-accent:#1A1305;--good:#5FD39A;--good-soft:#143427;--warn:#F2A65A;--warn-soft:#3A2614;--bad:#FF8A80;--bad-soft:#3E1B18;--y26:#F2B84B;--y25:#4FD1C5;--y24:#8F9FFF;--h0:#1B242C;--h1:#F2B84B;--on-h1:#1A1305;--r:10px;--cardb:1px solid var(--line);--mono:'IBM Plex Mono',ui-monospace,monospace}
+.vB .big,.vB .sum b,.vB .tbl,.vB .bar-row b{font-family:var(--mono)}
+.vB .big{font-weight:500;letter-spacing:-.04em}
+.vC{--font:'Golos Text',system-ui,sans-serif;--dfont:'Unbounded','Golos Text',sans-serif;--bg:#F3F4F7;--surface:#FFFFFF;--surface2:#E7E9EF;--ink:#0B0F1A;--muted:#5F6676;--line:#DDE0E8;--accent:#2540FF;--accent-soft:#E3E7FF;--accent-ink:#1A2FC4;--on-accent:#fff;--good:#0C7F58;--good-soft:#D7F2E7;--warn:#B8400A;--warn-soft:#FFE6D6;--bad:#C4262E;--bad-soft:#FDE1E2;--y26:#2540FF;--y25:#0B0F1A;--y24:#8F96A8;--h0:#EDEFFF;--h1:#2540FF;--on-h1:#fff;--r:14px;--cardb:0}
+.vC .ttl{font-weight:500;font-size:20px}
+.vD{--font:'Onest',system-ui,sans-serif;--bg:#EBF0F4;--surface:#fff;--surface2:#DFE7EE;--ink:#13202C;--muted:#566574;--line:#D2DCE5;--accent:#1D3A56;--accent-soft:#DCE7F2;--accent-ink:#1D3A56;--on-accent:#fff;--good:#18774F;--good-soft:#D6F0E3;--warn:#A64B07;--warn-soft:#FDE8CF;--bad:#B42318;--bad-soft:#FBE0DD;--y26:#1D3A56;--y25:#3A86D1;--y24:#E0A23A;--h0:#E8EEF4;--h1:#1D3A56;--on-h1:#fff;--hs1:#2E8B63;--hs2:#3A6FD8;--hs3:#D9791A;--hs4:#A34A8C;--r:24px;--cardb:0}
+.vD .hb{color:#fff}
+.hero{border-radius:var(--r);padding:16px;background:var(--accent-soft);display:flex;align-items:center;justify-content:space-between;gap:10px}
+.ringbox{position:relative;display:grid;place-items:center;flex:0 0 auto}
+.ringbox b{position:absolute;font-family:var(--dfont,var(--font));font-size:22px;font-weight:600}
+.tile{background:var(--surface);border:var(--cardb);border-radius:calc(var(--r) - 4px);padding:12px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.tile .n{font-family:var(--dfont,var(--font));font-size:30px;font-weight:600;line-height:1.1}
+.htile{border-radius:var(--r);padding:12px;background:var(--surface);display:flex;flex-direction:column;gap:6px;min-width:0}
+.htile .top{display:flex;align-items:center;gap:6px;font-weight:600;font-size:14px}
+.htile .rg{display:flex;align-items:center;justify-content:space-between}
+.htile .pc{font-size:26px;font-weight:600;font-variant-numeric:tabular-nums;font-family:var(--dfont,var(--font))}
+.cbig{display:flex;gap:10px}
+.cbig div{flex:1;background:var(--surface);border-radius:var(--r);padding:14px;min-width:0}
+.cbig b{font-family:var(--dfont);font-size:54px;font-weight:600;line-height:1;display:block;letter-spacing:-.04em}
+.cbig span{font-size:13px;color:var(--muted)}
+.cbig div.in b{color:var(--accent)}
+.stat{border-radius:var(--r);background:var(--ink);color:#fff;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.stat .row{justify-content:space-between}
+.stat .pb{height:6px;border-radius:3px;background:rgba(255,255,255,.2);overflow:hidden}
+.stat .pb i{display:block;height:100%;background:#fff;border-radius:3px}
+.mono{font-family:var(--mono)}
+.livedot{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--good)}
+.livedot i{width:7px;height:7px;border-radius:50%;background:var(--good);display:block}
+.ddl{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border-radius:8px;background:var(--surface2);font-weight:600;font-size:15px}
+.segbar{display:flex;gap:2px;margin-top:10px}
+.segbar i{flex:1;height:18px;border-radius:2px;background:var(--surface2)}
+.segbar i.f{background:var(--accent)}
+.segbar i.p{background:var(--accent);opacity:.35}
+</style>
+
+<div class="wrap">
+  <h1>Prostir Booking Dashboard: 4 напрямки дизайну</h1>
+  <p class="lead">Android-застосунок для статистики бронювань. Усі екрани нижче намальовані на прикладних даних (назви будинків, імена гостей і цифри вигадані). Відкрийте вкладку, щоб побачити повний набір екранів напрямку, у кожному можна прокручувати вміст усередині телефона.</p>
+  <div class="tabs" role="tablist" id="tabs"></div>
+  <div id="stage"></div>
+</div>
+
+<script>
+/* ---------------- data (sample) ---------------- */
+const DATES=['17.09','22.09','27.09','02.10','07.10','12.10','17.10','22.10','27.10','01.11','06.11','11.11','16.11','21.11','26.11','01.12'];
+const PACE={
+  2024:[0,2,5,8,12,16,21,26,31,36,40,45,49,53,55,57],
+  2025:[0,3,7,11,16,21,27,33,39,45,50,55,60,64,67,68],
+  2026:[0,4,9,15,22,29,36,42,48,55,62,null,null,null,null,null]
+};
+const FINAL={2024:57,2025:68,2026:null};
+const MON=['Січ','Лют','Бер','Кві','Тра','Чер','Лип','Сер','Вер','Жов','Лис','Гру'];
+const OCC={
+  2026:[54,61,38,33,45,58,82,91,52,47,62,31],
+  2025:[50,58,35,30,42,55,79,88,49,44,68,72],
+  2024:[44,52,30,27,38,50,74,83,45,40,57,66]
+};
+const HOUSES=['Смерека','Ялівець','Бук','Явір'];
+const HM=[
+  [62,70,44,40,52,66,90,95,58,52,75,38],
+  [48,55,32,28,40,52,80,92,48,44,50,28],
+  [56,60,40,34,46,60,78,88,50,46,62,30],
+  [50,59,36,30,42,54,80,89,52,46,61,28]
+];
+const RECS=[
+  {t:'in',h:1,from:'09.11',to:'12.11',n:3,g:4,name:'Олена Коваленко',ph:'+380 67 123 45 67',gc:'Приїдемо близько 16:00, їдемо з собакою.',ac:'Тварини дозволені, доплата 500 ₴ на місці.',src:'Сайт',due:'4 200 ₴'},
+  {t:'out',h:2,from:'06.11',to:'09.11',n:3,g:2,name:'Андрій Мельник',ph:'+380 50 987 65 43',gc:'',ac:'Ключ залишити у скриньці біля входу.',src:'Booking'},
+  {t:'in',h:4,from:'09.11',to:'11.11',n:2,g:6,name:'Ірина Бондар',ph:'+380 63 555 01 22',gc:'Святкуємо день народження, чи можна пізній заїзд?',ac:'',src:'Сайт'}
+];
+const I={
+ home:'M3 11l9-8 9 8M5 10v10h14V10',
+ trend:'M3 17l6-6 4 4 8-8M15 7h6v6',
+ grid:'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z',
+ swap:'M4 8h13l-3-3M20 16H7l3 3',
+ phone:'M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z',
+ chev:'M9 6l6 6-6 6',
+ chevl:'M15 6l-6 6 6 6',
+ down:'M6 9l6 6 6-6',
+ refresh:'M20 12a8 8 0 11-2.3-5.7M20 4v5h-5',
+ wifioff:'M3 3l18 18M8.5 16.4a5 5 0 017 0M5 12.9a10 10 0 014-2.5M12 20h.01M19 12.9a10 10 0 00-5-2.7',
+ alert:'M12 8v5M12 17h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z',
+ lock:'M6 11V8a6 6 0 1112 0v3M5 11h14v10H5z',
+ cal:'M4 6h16v14H4zM4 10h16M8 3v4M16 3v4',
+ arin:'M4 12h12M12 7l5 5-5 5M20 4v16',
+ arout:'M20 12H8M12 7l-5 5 5 5M4 4v16'
+};
+const ic=(n,s=20)=>`<svg class="ic" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${I[n]}"/></svg>`;
+
+/* ---------------- building blocks ---------------- */
+const HOT={A:78,B:50,C:70,D:70};
+const hc=(v,hot)=>v==null?'<td class="nil">—</td>':`<td class="${v>=hot?'hot':''}" style="background:color-mix(in srgb,var(--h1) ${Math.round(6+v*.94)}%,var(--h0))">${v}</td>`;
+
+function ring(p,s=96,sw=10,col='var(--accent)'){
+  const r=(s-sw)/2,c=2*Math.PI*r,m=s/2;
+  return `<span class="ringbox"><svg width="${s}" height="${s}" viewBox="0 0 ${s} ${s}" aria-hidden="true"><circle cx="${m}" cy="${m}" r="${r}" fill="none" style="stroke:var(--surface2)" stroke-width="${sw}"/><circle cx="${m}" cy="${m}" r="${r}" fill="none" style="stroke:${col}" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${(c*p/100).toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 ${m} ${m})"/></svg><b style="font-size:${Math.round(s/4.4)}px">${p}%</b></span>`;
+}
+
+function line(h=190,compact=false){
+  const w=328,L=28,R=compact?10:34,T=compact?8:18,B=compact?18:24,iw=w-L-R,ih=h-T-B;
+  const x=i=>L+iw*i/15,y=v=>T+ih*(1-v/100);
+  let s=`<svg viewBox="0 0 ${w} ${h}" width="100%" class="chart" role="img" aria-label="Темп бронювання: листопад за 2024, 2025 та 2026 роки">`;
+  (compact?[0,50,100]:[0,25,50,75,100]).forEach(t=>{s+=`<line class="grid" x1="${L}" x2="${w-R}" y1="${y(t)}" y2="${y(t)}"/><text class="ax" x="${L-6}" y="${y(t)+3.5}" text-anchor="end">${t}</text>`});
+  DATES.forEach((d,i)=>{if(i%(compact?5:3)===0||i===15)s+=`<text class="ax" x="${x(i)}" y="${h-5}" text-anchor="middle">${d}</text>`});
+  const xt=x(10.6);
+  s+=`<line class="today" x1="${xt}" x2="${xt}" y1="${T}" y2="${T+ih}"/>`;
+  if(!compact)s+=`<text class="ax" x="${xt}" y="${T-6}" text-anchor="middle">сьогодні</text>`;
+  [2024,2025,2026].forEach(yr=>{let d='';PACE[yr].forEach((v,i)=>{if(v!=null)d+=(d?'L':'M')+x(i).toFixed(1)+' '+y(v).toFixed(1)});s+=`<path d="${d}" class="ln s${yr}"/>`});
+  s+=`<circle class="dot" cx="${x(10)}" cy="${y(62)}" r="5"/>`;
+  if(!compact){
+    s+=`<text class="vl" x="${x(10)}" y="${y(62)-10}" text-anchor="middle">62%</text>`;
+    s+=`<text class="vl" x="${x(15)+6}" y="${y(68)+3.5}">68%</text><text class="vl" x="${x(15)+6}" y="${y(57)+3.5}">57%</text>`;
+  }
+  return s+'</svg>';
+}
+const legendYears=()=>`<div class="legend"><span><i style="background:var(--y24)"></i>2024</span><span><i style="background:var(--y25)"></i>2025</span><span><i style="background:var(--y26)"></i>2026</span><span>┆ сьогодні, 09.11</span></div>`;
+
+function paceTable(k){
+  const hot=HOT[k];
+  let s=`<table class="tbl" aria-label="Темп бронювання, таблиця"><thead><tr><th>Дата</th><th>2024</th><th>2025</th><th>2026</th></tr></thead><tbody>`;
+  DATES.forEach((d,i)=>{s+=`<tr class="${i===10?'now':''}"><td class="d">${d}</td>${hc(PACE[2024][i],hot)}${hc(PACE[2025][i],hot)}${hc(PACE[2026][i],hot)}</tr>`});
+  s+=`<tr class="tot"><td class="d">Підсумок</td>${hc(57,hot)}${hc(68,hot)}<td class="nil" style="opacity:1">62*</td></tr></tbody></table><div class="sub" style="margin-top:6px">* на сьогодні. Порожні клітинки: дати в майбутньому.</div>`;
+  return s;
+}
+const paceSummary=()=>`<div class="sum"><div><small><i style="background:var(--y24)"></i>2024</small><b>57%</b><em>підсумок</em></div><div><small><i style="background:var(--y25)"></i>2025</small><b>68%</b><em>підсумок</em></div><div><small><i style="background:var(--y26)"></i>2026</small><b>62%</b><em>на сьогодні</em></div></div>`;
+
+const rbar=(x,top,bw,base,r=4)=>`M${x},${base}V${top+r}Q${x},${top} ${x+r},${top}H${x+bw-r}Q${x+bw},${top} ${x+bw},${top+r}V${base}Z`;
+function bars(h=170,year=2026){
+  const w=328,L=28,R=4,T=18,B=22,iw=w-L-R,ih=h-T-B,sl=iw/12,bw=16;
+  const y=v=>T+ih*(1-v/100);
+  let s=`<svg viewBox="0 0 ${w} ${h}" width="100%" class="chart" role="img" aria-label="Завантаженість по місяцях ${year} року">`;
+  [0,50,100].forEach(t=>{s+=`<line class="grid" x1="${L}" x2="${w-R}" y1="${y(t)}" y2="${y(t)}"/><text class="ax" x="${L-6}" y="${y(t)+3.5}" text-anchor="end">${t}</text>`});
+  OCC[year].forEach((v,i)=>{
+    const x=L+sl*i+(sl-bw)/2;
+    s+=`<path class="${i===11?'barp':'bar'}" d="${rbar(x,y(v),bw,y(0))}"/>`;
+    const pv=OCC[year-1]?OCC[year-1][i]:null;
+    if(pv!=null)s+=`<line class="tick" x1="${x-2}" x2="${x+bw+2}" y1="${y(pv)}" y2="${y(pv)}"/>`;
+    s+=`<text class="ax" x="${x+bw/2}" y="${h-6}" text-anchor="middle">${MON[i]}</text>`;
+    if(i===10)s+=`<text class="vl" x="${x+bw/2}" y="${y(v)-5}" text-anchor="middle">${v}%</text>`;
+  });
+  return s+'</svg>';
+}
+const legendBars=()=>`<div class="legend"><span><i class="sq" style="background:var(--accent)"></i>2026</span><span><i style="background:var(--ink);height:2px;width:12px"></i>2025, той самий місяць</span><span style="opacity:.8">грудень: поки що</span></div>`;
+
+function matrix(k,colored=false){
+  const hot=HOT[k];
+  let s=`<table class="tbl th" aria-label="Завантаженість: місяць × будинок"><thead><tr><th>Місяць</th><th>Усі</th>${HOUSES.map((n,i)=>`<th>${colored?`<span class="hb h${i+1}">${i+1}</span>`:''}${colored?'':(i+1)+' '}</th>`).join('')}</tr></thead><tbody>`;
+  MON.forEach((m,i)=>{s+=`<tr class="${i===10?'now':''}"><td class="d">${m}${i===11?'*':''}</td>${hc(OCC[2026][i],hot)}${HM.map(r=>hc(r[i],hot)).join('')}</tr>`});
+  s+=`<tr class="tot"><td class="d">Рік</td>${hc(55,hot)}${HM.map(r=>hc(Math.round(r.reduce((a,b)=>a+b,0)/12),hot)).join('')}</tr></tbody></table><div class="sub" style="margin-top:6px">${HOUSES.map((n,i)=>(i+1)+' '+n).join(' · ')}<br>* грудень: заброньовано на сьогодні</div>`;
+  return s;
+}
+const yearSel=()=>`<div class="seg"><b>2024</b><b>2025</b><b class="on">2026</b></div>`;
+const monSel=()=>`<div class="sel"><span class="ar">${ic('chevl',18)}</span><span class="m">Листопад</span><span class="ar">${ic('chev',18)}</span></div>`;
+const avgCard=()=>`<div class="card"><div class="row" style="justify-content:space-between"><div><div class="lbl">Середній за 2026</div><div style="font-size:30px;font-weight:600;font-family:var(--dfont,var(--font))">55%</div></div><div style="text-align:right"><span class="chip good">▲ 2025: 56%</span><div class="sub" style="margin-top:6px">2024: 51%</div></div></div></div>`;
+
+/* arrivals */
+function rec(r,dense=false){
+  const hn=HOUSES[r.h-1];
+  const tag=`<span class="tag ${r.t}">${ic(r.t==='in'?'arin':'arout',14)}${r.t==='in'?'Заїзд':'Виїзд'}</span>`;
+  if(dense)return `<div class="dense"><span class="hb h${r.h}">${r.h}</span><div class="a"><b>${hn} · ${r.name}</b><span>${r.t==='in'?'заїзд':'виїзд'} · ${r.from} → ${r.to} · ${r.n} ноч. · ${r.g} гост.</span></div>${ic('chev',18)}</div>`;
+  return `<div class="rc"><div class="t1">${tag}<span class="hb h${r.h}">${r.h}</span><span class="hn">${hn}</span><span class="chip mute" style="margin-left:auto">${r.src}</span></div>
+  <div class="dt"><span>Заїзд <b>${r.from}</b></span><span>Виїзд <b>${r.to}</b></span><span><b>${r.n}</b> ноч. · <b>${r.g}</b> гост.</span></div>
+  <div class="who"><div><strong>${r.name}</strong><span>${r.ph}</span></div><span class="call">${ic('phone',16)}Подзвонити</span></div>
+  ${r.due?`<div class="due">${ic('alert',16)}Не доплачено офлайн: ${r.due}</div>`:''}
+  ${r.gc?`<div class="cm"><small>Коментар гостя</small>${r.gc}</div>`:''}
+  ${r.ac?`<div class="cm adm"><small>Коментар адміна</small>${r.ac}</div>`:''}</div>`;
+}
+const period=(on=0)=>`<div class="seg">${['Сьогодні','Завтра','Цей тиждень'].map((t,i)=>`<b class="${i===on?'on':''}">${t}</b>`).join('')}</div>`;
+const foot=()=>`<div class="foot"><i></i>Оновлено щойно · Booking з’являється до 15 хв</div>`;
+
+/* chrome */
+const sb=()=>`<div class="sb"><span>9:41</span><span><i></i><i></i></span></div>`;
+const NAV=[['home','Огляд','home'],['pace','Темп','trend'],['months','Місяці','grid'],['arr','Заїзди','swap']];
+function nav(k,act){
+  if(k==='C')return '';
+  const a=NAV.map(([id,l,i])=>{
+    const on=id===act?' on':'';
+    if(k==='A')return `<a class="${on}"><span>${ic(i,22)}</span>${l}</a>`;
+    if(k==='B')return `<a class="${on}">${ic(i,20)}${l}</a>`;
+    return `<a class="${on}">${ic(i,20)}<b>${l}</b></a>`;
+  }).join('');
+  return `<div class="nav nav${k}">${a}</div>`;
+}
+const topC=act=>`<div class="topC"><div class="wm"><span>ПРОСТІР</span><span class="livedot"><i></i>наживо</span></div><div class="seg">${[['home','Сьогодні'],['pace','Темп'],['months','Місяці']].map(([id,l])=>`<b class="${id===act?'on':''}">${l}</b>`).join('')}</div></div>`;
+function phone(k,act,body,opts={}){
+  const top=k==='C'&&!opts.nonav?topC(act):'';
+  return `<div class="phone v${k}">${sb()}${top}<div class="body">${body}</div>${opts.nonav?'':nav(k,act)}</div>`;
+}
+const fig=(h,cap)=>`<figure class="fig">${h}<figcaption>${cap}</figcaption></figure>`;
+
+/* ---------------- screens ---------------- */
+const login={
+  A:`<div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:22px"><div style="display:flex;flex-direction:column;align-items:center;gap:12px"><div class="mark" style="width:64px;height:64px;border-radius:20px">${ic('home',32).replace('currentColor','#fff')}</div><div class="ttl">Простір</div><div class="sub">Панель бронювань для власника</div></div><div class="field"><label>Логін</label><div class="inp">owner</div></div><div class="field"><label>Пароль</label><div class="inp">••••••••<small>Показати</small></div></div><div class="btn">Увійти</div></div>`,
+  B:`<div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:18px;padding-bottom:8px"><div><div class="mono" style="color:var(--accent);font-size:12px;margin-bottom:10px">PROSTIR / BOOKING</div><div class="ttl" style="font-size:30px;line-height:1.1">Завантаженість<br>у цифрах</div><div class="sub" style="margin-top:8px">Увійдіть, щоб побачити темп бронювання, місяці та заїзди.</div></div><div class="field"><label>Логін</label><div class="inp">owner</div></div><div class="field"><label>Пароль</label><div class="inp">••••••••<small>Показати</small></div></div><div class="btn">Увійти</div><div class="sub" style="text-align:center">Токен зберігається на пристрої, пароль не запам’ятовується</div></div>`,
+  C:`<div style="flex:1;display:flex;flex-direction:column;justify-content:space-between;padding-bottom:6px"><div style="padding-top:30px"><div style="font-family:var(--dfont);font-weight:600;font-size:13px;letter-spacing:.04em;color:var(--accent)">ПРОСТІР</div><div style="font-family:var(--dfont);font-size:40px;line-height:1.02;font-weight:600;letter-spacing:-.04em;margin-top:12px">Хто<br>приїжджає<br>сьогодні?</div></div><div style="display:flex;flex-direction:column;gap:12px"><div class="field"><label>Логін</label><div class="inp" style="border-radius:12px">owner</div></div><div class="field"><label>Пароль</label><div class="inp" style="border-radius:12px">••••••••<small>Показати</small></div></div><div class="btn" style="border-radius:12px">Увійти</div></div></div>`,
+  D:`<div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:22px"><div><div style="display:flex;gap:6px;margin-bottom:16px">${[1,2,3,4].map(i=>`<span class="hb h${i}" style="width:28px;height:28px;font-size:13px">${i}</span>`).join('')}</div><div class="ttl" style="font-size:30px">Простір</div><div class="sub" style="margin-top:4px">Чотири будинки. Одна панель.</div></div><div class="field"><label>Логін</label><div class="inp">owner</div></div><div class="field"><label>Пароль</label><div class="inp">••••••••<small>Показати</small></div></div><div class="btn">Увійти</div></div>`
+};
+
+const houseBars=(k)=>HOUSES.map((n,i)=>{const v=HM[i][10];return `<div class="bar-row"><span>${k==='D'?`<span class="hb h${i+1}" style="width:16px;height:16px;font-size:10px;margin-right:5px">${i+1}</span>`:''}${n}</span><span class="t"><i style="width:${v}%;${k==='D'?`background:var(--hs${i+1})`:''}"></i></span><b>${v}%</b></div>`}).join('');
+
+const home={
+ A:()=>`<div class="appbar"><div><div class="sub">Доброго ранку</div><div class="ttl">Простір</div></div><span class="ibtn">${ic('refresh',20)}</span></div>
+  <div class="hero"><div><div class="lbl">Листопад 2026</div><div class="big" style="margin:4px 0 6px">62%</div><div class="sub" style="margin-bottom:8px">74 з 120 ночей заброньовано</div><span class="chip good">▲ +12 п.п. до 2025 на цю дату</span></div>${ring(62,104,11)}</div>
+  <div class="grid2"><div class="tile"><span class="lbl">Заїзди сьогодні</span><span class="n">2</span></div><div class="tile"><span class="lbl">Виїзди сьогодні</span><span class="n">1</span></div></div>
+  <div class="card"><div class="cardh">Темп бронювання<span>Листопад</span></div>${line(120,true)}</div>
+  <div class="card"><div class="cardh">Будинки, листопад<span>% ночей</span></div>${houseBars('A')}</div>${foot()}`,
+ B:()=>`<div class="appbar"><span class="ddl">Листопад 2026 ${ic('down',16)}</span><span class="livedot"><i></i>наживо</span></div>
+  <div class="card"><div class="lbl">Завантаженість, на сьогодні</div><div class="row" style="align-items:flex-end;justify-content:space-between;margin-top:6px"><div class="big" style="font-size:60px">61.7<span style="font-size:28px;color:var(--muted)">%</span></div><div style="text-align:right"><span class="chip good">+12 п.п.</span><div class="sub mono" style="margin-top:6px">vs 2025: 50%</div></div></div><div class="segbar">${Array.from({length:30},(_,i)=>`<i class="${i<9?'f':i<22?'p':''}"></i>`).join('')}</div><div class="sub mono" style="margin-top:6px">74 / 120 ночей · зайнято 9 днів</div></div>
+  <div class="grid2">${HOUSES.map((n,i)=>`<div class="tile"><span class="lbl">${i+1} · ${n}</span><span class="n mono" style="font-size:26px;font-weight:500">${HM[i][10]}%</span><div class="bar-row" style="grid-template-columns:1fr;margin-top:6px"><span class="t"><i style="width:${HM[i][10]}%"></i></span></div></div>`).join('')}</div>
+  <div class="card"><div class="cardh">Темп vs 2025, 2024<span>до 01.12</span></div>${line(130,true)}</div>
+  <div class="dense"><span style="color:var(--accent)">${ic('swap',20)}</span><div class="a"><b>Сьогодні: 2 заїзди · 1 виїзд</b><span>Смерека, Явір · Ялівець</span></div>${ic('chev',18)}</div>`,
+ C:()=>`<div style="padding-top:6px"><div class="sub">Понеділок</div><div class="ttl" style="font-size:26px">9 листопада</div></div>
+  <div class="cbig"><div class="in"><b>2</b><span>заїзди</span></div><div><b>1</b><span>виїзд</span></div></div>
+  ${rec(RECS[0])}${rec(RECS[1],true)}${rec(RECS[2],true)}
+  <div class="stat"><div class="row"><span style="font-size:13px;opacity:.8">Листопад · завантаженість</span><span style="font-family:var(--dfont);font-size:22px;font-weight:600">62%</span></div><div class="pb"><i style="width:62%"></i></div><span style="font-size:12px;opacity:.75">+12 п.п. до 2025 на цю дату</span></div>`,
+ D:()=>`<div class="appbar"><div><div class="sub">Всі будинки</div><div class="ttl">Листопад 2026</div></div><span class="ibtn">${ic('refresh',20)}</span></div>
+  <div class="card" style="display:flex;align-items:center;gap:14px">${ring(62,86,10,'var(--accent)')}<div style="min-width:0"><div class="lbl">Середня завантаженість</div><div style="font-size:15px;font-weight:600;margin:2px 0 6px">74 з 120 ночей</div><span class="chip good">▲ +12 п.п. до 2025</span></div></div>
+  <div class="grid2">${HOUSES.map((n,i)=>`<div class="htile"><div class="top"><span class="hb h${i+1}">${i+1}</span>${n}</div><div class="rg"><span class="pc">${HM[i][10]}%</span>${ring(HM[i][10],40,6,`var(--hs${i+1})`).replace(/<b[^>]*>.*?<\/b>/,'')}</div><span class="sub">${i===0?'заїзд сьогодні':i===3?'заїзд сьогодні':i===1?'виїзд сьогодні':'вільний до 14.11'}</span></div>`).join('')}</div>
+  <div class="card"><div class="cardh">Темп бронювання<span>Листопад</span></div>${line(120,true)}</div>${foot()}`
+};
+
+const orderPace={
+ A:['sel','sum','chart','table'],B:['sel','sum','table','chart'],C:['sel','hero','chart','table'],D:['sel','chart','sum','table']
+};
+function pace(k){
+  const blocks={
+    sel:monSel(),
+    sum:paceSummary(),
+    hero:`<div style="padding:4px 2px"><div class="lbl">Проти 2025 на цю дату</div><div style="font-family:var(--dfont);font-size:54px;font-weight:600;letter-spacing:-.04em;line-height:1.05;color:var(--accent)">+12 <span style="font-size:22px;color:var(--ink)">п.п.</span></div><div class="sub">62% зараз, у 2025 було 50%</div></div>`,
+    chart:`<div class="card">${line(200)}${legendYears()}</div>`,
+    table:`<div class="card">${paceTable(k)}</div>`
+  };
+  return phone(k,'pace',orderPace[k].map(b=>blocks[b]).join('')+foot());
+}
+const orderMon={A:['sel','avg','bars','mx'],B:['sel','mx','bars'],C:['sel','avg','bars','mx'],D:['sel','avg','mx','bars']};
+function months(k){
+  const blocks={
+    sel:yearSel(),avg:avgCard(),
+    bars:`<div class="card"><div class="cardh">По місяцях<span>% зайнятих ночей</span></div>${bars(170)}${legendBars()}</div>`,
+    mx:`<div class="card"><div class="cardh">Будинок × місяць</div>${matrix(k,k==='D')}</div>`
+  };
+  return phone(k,'months',orderMon[k].map(b=>blocks[b]).join('')+foot());
+}
+function arrivals(k){
+  let b;
+  if(k==='B')b=period(0)+`<div class="stl">Заїзди · 2</div>${rec(RECS[0])}${rec(RECS[2],true)}<div class="stl">Виїзди · 1</div>${rec(RECS[1],true)}`+foot();
+  else if(k==='C')b=`<div class="sub" style="margin-top:2px">Цей тиждень · 9–15 листопада</div><div class="day">Сьогодні · пн 9</div>${rec(RECS[0],true)}${rec(RECS[2],true)}${rec(RECS[1],true)}<div class="day">Завтра · вт 10</div><div class="dense"><span class="hb h3">3</span><div class="a"><b>Бук · Тарас Литвин</b><span>заїзд · 10.11 → 14.11 · 4 ноч. · 3 гост.</span></div>${ic('chev',18)}</div><div class="day">Ср 11</div><div class="dense"><span class="hb h4">4</span><div class="a"><b>Явір · Ірина Бондар</b><span>виїзд · 09.11 → 11.11</span></div>${ic('chev',18)}</div>`+foot();
+  else b=period(0)+rec(RECS[0])+rec(RECS[2])+rec(RECS[1])+foot();
+  return k==='C'?`<div class="phone vC">${sb()}<div class="topC"><div class="wm"><span>ПРОСТІР</span><span class="livedot"><i></i>наживо</span></div>${period(2)}</div><div class="body">${b}</div></div>`:phone(k,'arr',b);
+}
+function states(k){
+  const b=`
+  <div class="stl">Помилка входу</div>
+  <div class="field"><div class="inp err">owner</div><div class="inp err">••••••</div><div class="errmsg">${ic('alert',14)}Невірний логін або пароль. Перевірте дані й спробуйте ще раз.</div></div>
+  <div class="stl">Сеанс закінчився</div>
+  <div class="card"><div class="row">${ic('lock',22)}<div><b>Потрібно увійти знову</b><div class="sub">Сеанс завершено. Дані збережені, повернемо вас на екран входу.</div></div></div><div class="btn sm" style="margin-top:10px">Увійти</div></div>
+  <div class="stl">Завантаження</div>
+  <div class="card"><div class="sk" style="height:12px;width:40%"></div><div class="sk" style="height:46px;width:60%;margin:10px 0"></div><div class="sk" style="height:90px"></div></div>
+  <div class="stl">Немає мережі</div>
+  <div class="card center"><span class="ibtn">${ic('wifioff',24)}</span><b>Немає з’єднання</b><div class="sub">Показуємо дані станом на 09:12. Нове з’явиться, коли мережа повернеться.</div><div class="btn ghost sm">Повторити</div></div>
+  <div class="stl">Порожній день</div>
+  <div class="card center"><span class="ibtn">${ic('cal',24)}</span><b>Сьогодні заїздів немає</b><div class="sub">Найближчий заїзд: завтра, 10.11, Бук.</div></div>
+  <div class="stl">Гість ще не доплатив</div>
+  <div class="due">${ic('alert',16)}Не доплачено офлайн: 4 200 ₴</div>
+  <div class="stl">Потягнути вниз, щоб оновити</div>
+  <div class="center"><span class="ibtn spin">${ic('refresh',20)}</span><div class="sub">Оновлюємо…</div></div>${foot()}`;
+  return phone(k,'',b,{nonav:true});
+}
+const PHONES=[['Вхід',k=>phone(k,'',login[k],{nonav:true})],['Огляд',k=>phone(k,'home',home[k]())],['Темп бронювання',pace],['Завантаженість',months],['Заїзди й виїзди',arrivals],['Стани й помилки',states]];
+
+/* ---------------- variants ---------------- */
+const VAR={
+ A:{name:'A. Спокій',sub:'Material 3, світла, зелена',idea:'Знайома Android-мова. Після входу великий ринг із відсотком місяця і дві цифри на сьогодні. Нижня навігація з 4 пунктами.',pro:['Нативний вигляд, нічого вчити','Найкраща читабельність на сонці','Легко реалізувати на Material 3'],con:['Найменш щільний: менше даних на екрані','Багато білого, нижче «аналітика»']},
+ B:{name:'B. Аналітика',sub:'Темна, щільна, бурштин',idea:'Дані на першому місці. Таблиця-теплокарта стоїть вище за графік, великі числа у моноширинному шрифті, чотири будинки відразу на головному.',pro:['Максимум інформації без прокрутки','Теплокарта легко порівнює роки і будинки','OLED економить заряд'],con:['Складніший для нового користувача','Потрібна ще й світла тема']},
+ C:{name:'C. Сьогодні',sub:'Операційна, контрастна, синя',idea:'Головний екран відповідає на питання «хто приїжджає». Статистика на вкладках, відсоток місяця закріплений смугою знизу. Верхній перемикач замість нижньої навігації.',pro:['Найшвидше до дзвінка гостю','Один дотик до телефону з головного','Сильна типографіка, впізнаваність'],con:['Відсоток завантаженості не герой першого екрана','Менше місця під графіки']},
+ D:{name:'D. Будинки',sub:'Кольори й номери будинків',idea:'Кожен з чотирьох будинків має кольорове число 1–4, яке повторюється скрізь: плитки, таблиці, картки заїздів. Одразу видно, який будинок відстає.',pro:['Природна модель: чотири об’єкти','Швидко знайти слабкий будинок','Картки заїздів впізнаються по кольору'],con:['Кольори треба тримати послідовно скрізь','Не масштабується на 8+ будинків']}
+};
+function variantView(k){
+  const v=VAR[k];
+  return `<div class="vhead"><div><h2>${v.name}</h2><p>${v.idea}</p></div><div><h3>Сильні сторони</h3><ul>${v.pro.map(x=>`<li>${x}</li>`).join('')}</ul></div><div><h3>Ризики</h3><ul>${v.con.map(x=>`<li>${x}</li>`).join('')}</ul></div></div>
+  <div class="strip">${PHONES.map(([cap,fn])=>fig(fn(k),cap)).join('')}</div>`;
+}
+function overview(){
+  return `<div class="strip">${['A','B','C','D'].map(k=>fig(k==='C'?phone('C','home',home.C()):phone(k,'home',home[k]()),`${VAR[k].name}<br><span style="font-weight:400">${VAR[k].sub}</span>`)).join('')}</div>
+  <div class="notes">
+   <div><h3>Що спільне для всіх</h3><p>Вхід за логіном і паролем, токен тримається на пристрої. Всі списки оновлюються потягуванням вниз і наживо. Бронювання з Booking з’являються із затримкою до 15 хвилин, це написано під кожним екраном.</p></div>
+   <div><h3>Теплокарта замість числа</h3><p>Темп бронювання і матриця «будинок × місяць» зроблені як одноколірна шкала від світлого до насиченого. Порожнє майбутнє показане тире.</p></div>
+   <div><h3>Не лише колір</h3><p>Роки різняться товщиною лінії (поточний товщий), кожне число підписане. У варіанті D будинки ще й пронумеровані. Фінальну палітру варто перевірити на дальтонізм при реалізації.</p></div>
+  </div>`;
+}
+
+/* ---------------- tabs ---------------- */
+const TABS=[['all','Порівняння головних екранів'],['a','A · Спокій'],['b','B · Аналітика'],['c','C · Сьогодні'],['d','D · Будинки']];
+function show(id){
+  document.getElementById('stage').innerHTML=id==='all'?overview():variantView(id.toUpperCase());
+  document.querySelectorAll('#tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.id===id));
+}
+document.getElementById('tabs').innerHTML=TABS.map(([id,l])=>`<button role="tab" data-id="${id}" aria-selected="false">${l}</button>`).join('');
+document.getElementById('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;try{history.replaceState(null,'','#'+b.dataset.id)}catch(_){}show(b.dataset.id)});
+const startId=(location.hash||'').slice(1);
+show(TABS.some(t=>t[0]===startId)?startId:'all');
+window.addEventListener('hashchange',()=>{const h=location.hash.slice(1);if(TABS.some(t=>t[0]===h))show(h)});
+</script>

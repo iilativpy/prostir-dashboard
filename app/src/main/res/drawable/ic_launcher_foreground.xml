@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Four houses = four colored dots (design D). -->
+    <path android:fillColor="#34A474" android:pathData="M40,40m-11,0a11,11 0,1 1,22 0a11,11 0,1 1,-22 0" />
+    <path android:fillColor="#5580E0" android:pathData="M68,40m-11,0a11,11 0,1 1,22 0a11,11 0,1 1,-22 0" />
+    <path android:fillColor="#D2771F" android:pathData="M40,68m-11,0a11,11 0,1 1,22 0a11,11 0,1 1,-22 0" />
+    <path android:fillColor="#B658B0" android:pathData="M68,68m-11,0a11,11 0,1 1,22 0a11,11 0,1 1,-22 0" />
+</vector>

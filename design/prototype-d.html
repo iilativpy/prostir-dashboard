@@ -1,0 +1,313 @@
+<title>Prostir Houses Design</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: page = theme switch + strip of D phone screens + spec of tokens. Phone = house-centric Material-like UI with 1-4 colored badges. */
+:root{--bg:#F2F4F5;--fg:#14202A;--muted:#5A6874;--line:#D9DFE3;--card:#FFFFFF;--accent:#1D3A56;--on-accent:#fff;--font:'Onest',system-ui,sans-serif}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0F1519;--fg:#E6ECF0;--muted:#97A5B0;--line:#26323B;--card:#172026;--accent:#9CC3E8;--on-accent:#0F1519;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0F1519;--fg:#E6ECF0;--muted:#97A5B0;--line:#26323B;--card:#172026;--accent:#9CC3E8;--on-accent:#0F1519;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);padding-block:28px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));line-height:1.5}
+.wrap{max-width:1280px;margin:0 auto}
+h1{font-size:clamp(24px,4vw,34px);line-height:1.15;margin:0 0 8px;font-weight:650;text-wrap:balance;letter-spacing:-.01em}
+.lead{color:var(--muted);max-width:70ch;margin:0 0 20px;font-size:15px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.tabs button{font:inherit;font-size:14px;font-weight:500;padding:9px 15px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--fg);cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.tabs button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.strip{display:flex;gap:28px;overflow-x:auto;padding:6px 4px 22px;align-items:flex-start}
+.fig{margin:0;flex:0 0 auto}
+.fig figcaption{font-size:13px;color:var(--muted);text-align:center;margin-top:10px;font-weight:500;max-width:360px;margin-inline:auto}
+.spec{margin-top:26px;border-top:1px solid var(--line);padding-top:22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}
+.spec h3{margin:0 0 8px;font-size:15px}
+.spec p{margin:0 0 6px;color:var(--muted);font-size:14px}
+.sw{display:flex;flex-wrap:wrap;gap:8px}
+.sw span{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;padding:4px 10px 4px 5px;border:1px solid var(--line);border-radius:999px;background:var(--card)}
+.sw i{width:18px;height:18px;border-radius:50%;display:block}
+
+/* ---------- phone ---------- */
+.phone{width:360px;height:740px;border:7px solid #14171A;border-radius:44px;box-sizing:content-box;display:flex;flex-direction:column;overflow:hidden;position:relative;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:14px;line-height:1.35;box-shadow:0 0 0 1px rgba(128,128,128,.35),0 18px 40px -22px rgba(0,0,0,.45)}
+.phone *{box-sizing:border-box}
+.sb{height:30px;flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-size:12px;font-weight:500}
+.sb i{display:inline-block;width:14px;height:8px;border-radius:2px;background:var(--ink);opacity:.8;margin-left:5px}
+.sb i+i{width:20px}
+.body{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;padding:6px 16px 18px;display:flex;flex-direction:column;gap:12px}
+.body::-webkit-scrollbar{display:none}
+.body>*{flex-shrink:0}
+.tip.l{transform:translateX(-100%) translateX(-12px)}
+.tip.top{transform:none;left:auto;right:0;top:-44px}
+.ic{flex:0 0 auto}
+.appbar{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:44px}
+.ttl{font-size:22px;font-weight:600;line-height:1.15;letter-spacing:-.01em}
+.sub{font-size:12.5px;color:var(--muted)}
+.lbl{font-size:12px;color:var(--muted);font-weight:500}
+.ibtn{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--surface2);color:var(--ink)}
+.card{background:var(--surface);border-radius:var(--r);padding:14px;min-width:0}
+.cardh{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:8px;font-weight:600;font-size:14px}
+.cardh span{font-weight:400;font-size:12px;color:var(--muted)}
+.row{display:flex;align-items:center;gap:12px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:500;background:var(--accent-soft);color:var(--accent-ink);white-space:nowrap}
+.chip.good{background:var(--good-soft);color:var(--good)}
+.chip.mute{background:var(--surface2);color:var(--muted)}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;height:48px;border-radius:20px;background:var(--accent);color:var(--on-accent);font-weight:600;font-size:15px}
+.btn.ghost{background:var(--surface2);color:var(--ink)}
+.btn.sm{height:38px;font-size:13.5px;padding:0 14px}
+.seg{display:flex;background:var(--surface2);border-radius:999px;padding:3px;gap:2px}
+.seg b{flex:1;text-align:center;padding:7px 4px;border-radius:999px;font-size:13px;font-weight:500;color:var(--muted);white-space:nowrap}
+.seg b.on{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.18)}
+.sel{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.sel .m{font-weight:600;font-size:18px}
+.sel .ar{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--surface2)}
+/* house filter */
+.hf{display:flex;gap:6px;overflow:hidden}
+.hf>span{flex:0 0 auto;height:34px;padding:0 12px 0 6px;border-radius:17px;background:var(--surface);display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:500;border:1.5px solid transparent;color:var(--ink)}
+.hf>span.all{padding:0 14px}
+.hf>span.on{border-color:var(--ink)}
+.hf>span.dim{opacity:.55}
+.hb{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;color:#fff;font-size:12px;font-weight:700;flex:0 0 auto}
+.hb.h1{background:var(--hs1)}.hb.h2{background:var(--hs2)}.hb.h3{background:var(--hs3)}.hb.h4{background:var(--hs4)}
+.dark .hb{color:#0B1118}
+.sum{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.sum div{background:var(--surface);border-radius:16px;padding:9px 10px;min-width:0}
+.sum small{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.sum small i{width:9px;height:9px;border-radius:50%;display:block}
+.sum b{font-size:20px;font-weight:600;font-variant-numeric:tabular-nums}
+.sum em{font-style:normal;font-size:11px;color:var(--muted);display:block}
+.chartbox{position:relative}
+.chart{display:block;overflow:visible}
+.chart .grid{stroke:var(--line);stroke-width:1}
+.chart .ax{fill:var(--muted);font-size:10px;font-variant-numeric:tabular-nums}
+.chart .vl{fill:var(--ink);font-size:11px;font-weight:600}
+.chart .today{stroke:var(--muted);stroke-width:1;stroke-dasharray:3 3}
+.chart .cur{stroke:var(--ink);stroke-width:1}
+.chart .ln{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.chart .s2026{stroke:var(--y26);stroke-width:3}
+.chart .s2025{stroke:var(--y25)}
+.chart .s2024{stroke:var(--y24);stroke-dasharray:5 4}
+.chart .dot{stroke:var(--surface);stroke-width:2}
+.chart .bar{fill:var(--y26)}
+.chart .bar.sel{fill:var(--y26)}
+.chart .barp{opacity:.35}
+.chart .tick{stroke:var(--ink);stroke-width:2;stroke-linecap:round}
+.tip{position:absolute;transform:translateX(-50%);background:var(--ink);color:var(--bg);border-radius:12px;padding:8px 10px;font-size:12px;line-height:1.4;box-shadow:0 6px 18px rgba(0,0,0,.28);white-space:nowrap;pointer-events:none;z-index:2}
+.tip b{font-weight:600}
+.tip .r{display:flex;align-items:center;gap:6px;font-variant-numeric:tabular-nums}
+.tip .r i{width:8px;height:8px;border-radius:50%;display:block}
+.tip .d{opacity:.7;margin-bottom:2px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:8px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{display:block;width:14px;height:3px;border-radius:2px}
+.legend i.sq{width:10px;height:10px;border-radius:3px}
+.tbl{width:100%;border-collapse:separate;border-spacing:2px;font-variant-numeric:tabular-nums;table-layout:fixed}
+.tbl th{font-size:11px;color:var(--muted);font-weight:500;text-align:center;padding:4px 0;white-space:nowrap}
+.tbl th:first-child,.tbl td.d{text-align:left;width:56px}
+.tbl td{height:27px;text-align:center;font-size:12.5px;border-radius:6px;color:var(--ink)}
+.tbl td.d{color:var(--muted);font-size:12px;background:none;border-radius:0}
+.tbl td.hot{color:var(--on-h1)}
+.tbl td.nil{color:var(--muted);background:var(--surface2);opacity:.7}
+.tbl td.fade{opacity:.28}
+.tbl tr.tot td{font-weight:700;height:32px}
+.tbl tr.tot td.d,.tbl tr.now td.d{color:var(--ink);font-weight:600}
+.tbl th .hb{width:18px;height:18px;font-size:10px}
+.foot{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;justify-content:center;padding-top:2px}
+.foot i{width:7px;height:7px;border-radius:50%;background:var(--good);display:block}
+.navD{margin:0 14px 14px;background:var(--accent);border-radius:26px;padding:6px;display:flex;gap:4px;flex:0 0 auto}
+.navD a{flex:1;height:44px;border-radius:20px;display:flex;align-items:center;justify-content:center;gap:6px;color:rgba(255,255,255,.72);font-size:13px;font-weight:500}
+.navD a.on{background:#fff;color:var(--accent);flex:2.2}
+.navD a:not(.on) b{display:none}
+.dark .navD a{color:rgba(15,22,29,.7)}
+.dark .navD a.on{background:#0F161D;color:#fff}
+/* arrivals */
+.rc{background:var(--surface);border-radius:var(--r);padding:13px;display:flex;flex-direction:column;gap:9px;min-width:0}
+.rc .t1{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tag{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px}
+.tag.in{background:var(--accent-soft);color:var(--accent-ink)}
+.tag.out{background:var(--surface2);color:var(--ink)}
+.hn{font-weight:600;font-size:16px}
+.rc .dt{display:flex;gap:14px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.rc .dt b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+.rc .who{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.rc .who div{min-width:0}
+.rc .who strong{display:block;font-weight:600}
+.rc .who span{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.call{display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 14px;border-radius:20px;background:var(--accent);color:var(--on-accent);font-weight:600;font-size:13px;flex:0 0 auto}
+.cm{font-size:13px;border-radius:12px;padding:8px 10px;background:var(--surface2)}
+.cm small{display:block;font-size:11px;color:var(--muted);font-weight:500;margin-bottom:1px}
+.cm.adm{background:var(--accent-soft)}
+.cm.adm small{color:var(--accent-ink)}
+.due{display:flex;align-items:center;gap:8px;background:var(--warn-soft);color:var(--warn);border-radius:12px;padding:8px 10px;font-size:13px;font-weight:500}
+.dense{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface);border-radius:var(--r)}
+.dense .a{flex:1;min-width:0}
+.dense .a b{display:block;font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dense .a span{font-size:12px;color:var(--muted)}
+.day{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-top:4px}
+/* states */
+.sk{background:linear-gradient(90deg,var(--surface2),var(--line),var(--surface2));background-size:200% 100%;animation:sh 1.5s linear infinite;border-radius:8px}
+@keyframes sh{to{background-position:-200% 0}}
+.spin{animation:rot 1s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.sk,.spin{animation:none}}
+.stl{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600;margin:6px 0 -4px}
+.center{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;padding:6px 4px}
+.center .ibtn{width:48px;height:48px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:12.5px;color:var(--muted);font-weight:500}
+.inp{height:50px;border-radius:16px;border:1.5px solid var(--line);background:var(--surface);display:flex;align-items:center;justify-content:space-between;padding:0 14px;font-size:15px}
+.inp.err{border-color:var(--bad)}
+.inp small{color:var(--accent-ink);font-size:12.5px;font-weight:500}
+.errmsg{font-size:12.5px;color:var(--bad);display:flex;gap:6px;align-items:center}
+.ringbox{position:relative;display:grid;place-items:center;flex:0 0 auto}
+.ringbox b{position:absolute;font-weight:600}
+.htile{border-radius:var(--r);padding:12px;background:var(--surface);display:flex;flex-direction:column;gap:6px;min-width:0}
+.htile .top{display:flex;align-items:center;gap:6px;font-weight:600;font-size:14px}
+.htile .rg{display:flex;align-items:center;justify-content:space-between}
+.htile .pc{font-size:26px;font-weight:600;font-variant-numeric:tabular-nums}
+.avg{display:flex;align-items:center;gap:14px}
+.menu{position:absolute;top:86px;right:16px;width:220px;background:var(--surface);border-radius:20px;padding:8px;box-shadow:0 10px 30px rgba(0,0,0,.3);border:1px solid var(--line);z-index:3}
+.menu .mi{display:flex;align-items:center;gap:10px;height:44px;padding:0 12px;border-radius:12px;font-weight:500}
+.menu .mi+.mi{color:var(--bad)}
+.menu .ms{font-size:11.5px;color:var(--muted);padding:6px 12px 4px;border-top:1px solid var(--line);margin-top:4px}
+/* tokens */
+.vD{--bg:#EBF0F4;--surface:#fff;--surface2:#DFE7EE;--ink:#13202C;--muted:#566574;--line:#D2DCE5;--accent:#1D3A56;--accent-soft:#DCE7F2;--accent-ink:#1D3A56;--on-accent:#fff;--good:#18774F;--good-soft:#D6F0E3;--warn:#A64B07;--warn-soft:#FDE8CF;--bad:#B42318;--bad-soft:#FBE0DD;--y26:#4B50C8;--y25:#0A8DA8;--y24:#B7791F;--h0:#E8EEF4;--h1:#1D3A56;--on-h1:#fff;--hs1:#2E8B63;--hs2:#3A6FD8;--hs3:#C96A0C;--hs4:#A34A8C;--r:24px}
+.vD.dark{--bg:#0F161D;--surface:#18222C;--surface2:#212E3A;--ink:#E8EEF3;--muted:#93A3B1;--line:#2A3846;--accent:#8DB8E8;--accent-soft:#1F3347;--accent-ink:#B7D4F2;--on-accent:#0F161D;--good:#58CC96;--good-soft:#16342A;--warn:#F0A45D;--warn-soft:#3A2A16;--bad:#FF8A80;--bad-soft:#3F1D1A;--y26:#7C82EE;--y25:#22A5B6;--y24:#BE8522;--h0:#1B2733;--h1:#6FA8E6;--on-h1:#0E1A26;--hs1:#34A474;--hs2:#5580E0;--hs3:#D2771F;--hs4:#B658B0}
+</style>
+
+<div class="wrap">
+  <h1>Prostir: дизайн D «Будинки»</h1>
+  <p class="lead">Деталізований напрямок D. Кожен з 4 будинків має колір і число 1–4, і вони повторюються на всіх екранах. Додано фільтр будинку, підказку при дотику до графіка, темну тему та перевірену палітру. Дані прикладні, структура даних відповідає Admin API бекенду.</p>
+  <div class="tabs" role="tablist" id="tabs"></div>
+  <div class="strip" id="stage"></div>
+  <div class="spec" id="spec"></div>
+</div>
+
+<script>
+const DATES=['17.09','22.09','27.09','02.10','07.10','12.10','17.10','22.10','27.10','01.11','06.11','11.11','16.11','21.11','26.11','30.11','01.12'];
+const PACE={2024:[0,2,5,8,12,16,21,26,31,36,40,45,49,53,55,56,57],2025:[0,3,7,11,16,21,27,33,39,45,50,55,60,64,67,68,68],2026:[0,4,9,15,22,29,36,42,48,55,62,null,null,null,null,null,null]};
+const MON=['Січ','Лют','Бер','Кві','Тра','Чер','Лип','Сер','Вер','Жов','Лис','Гру'];
+const OCC={2026:[54,61,38,33,45,58,82,91,52,47,62,31],2025:[50,58,35,30,42,55,79,88,49,44,68,72],2024:[44,52,30,27,38,50,74,83,45,40,57,66]};
+const HOUSES=['Prostir #1','Prostir #2','Prostir #3','Prostir #4'];
+const HM=[[62,70,44,40,52,66,90,95,58,52,75,38],[48,55,32,28,40,52,80,92,48,44,50,28],[56,60,40,34,46,60,78,88,50,46,62,30],[50,59,36,30,42,54,80,89,52,46,61,28]];
+const RECS=[
+ {t:'in',h:1,from:'09.11',to:'12.11',n:3,g:4,name:'Олена Коваленко',ph:'+380 67 123 45 67',gc:'Приїдемо близько 16:00, їдемо з собакою.',ac:'Тварини дозволені, доплата 500 ₴ на місці.',src:'Сайт',due:true},
+ {t:'out',h:2,from:'06.11',to:'09.11',n:3,g:2,name:'Андрій Мельник',ph:'+380 50 987 65 43',gc:'',ac:'Ключ залишити у скриньці біля входу.',src:'Booking'},
+ {t:'in',h:4,from:'09.11',to:'11.11',n:2,g:null,name:'Ірина Бондар',ph:'+380 63 555 01 22',gc:'Святкуємо день народження, чи можна пізній заїзд?',ac:'',src:'Адмін'}
+];
+const I={home:'M3 11l9-8 9 8M5 10v10h14V10',trend:'M3 17l6-6 4 4 8-8M15 7h6v6',grid:'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z',swap:'M4 8h13l-3-3M20 16H7l3 3',phone:'M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z',chev:'M9 6l6 6-6 6',chevl:'M15 6l-6 6 6 6',refresh:'M20 12a8 8 0 11-2.3-5.7M20 4v5h-5',wifioff:'M3 3l18 18M8.5 16.4a5 5 0 017 0M5 12.9a10 10 0 014-2.5M12 20h.01M19 12.9a10 10 0 00-5-2.7',dots:'M12 5h.01M12 12h.01M12 19h.01',alert:'M12 8v5M12 17h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z',lock:'M6 11V8a6 6 0 1112 0v3M5 11h14v10H5z',cal:'M4 6h16v14H4zM4 10h16M8 3v4M16 3v4',arin:'M4 12h12M12 7l5 5-5 5M20 4v16',arout:'M20 12H8M12 7l-5 5 5 5M4 4v16'};
+const ic=(n,s=20)=>`<svg class="ic" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${I[n]}"/></svg>`;
+let DARK=false;
+const HOT=()=>DARK?50:70;
+const hc=(v,extra='')=>v==null?'<td class="nil">—</td>':`<td class="${v>=HOT()?'hot':''} ${extra}" style="background:color-mix(in srgb,var(--h1) ${Math.round(6+v*.94)}%,var(--h0))">${v}</td>`;
+function ring(p,s,sw,col){const r=(s-sw)/2,c=2*Math.PI*r,m=s/2;return `<span class="ringbox"><svg width="${s}" height="${s}" viewBox="0 0 ${s} ${s}" aria-hidden="true"><circle cx="${m}" cy="${m}" r="${r}" fill="none" style="stroke:var(--surface2)" stroke-width="${sw}"/><circle cx="${m}" cy="${m}" r="${r}" fill="none" style="stroke:${col}" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${(c*p/100).toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 ${m} ${m})"/></svg>${s>60?`<b style="font-size:${Math.round(s/4.2)}px">${p}%</b>`:''}</span>`}
+
+/* line chart; cursor = index with touch crosshair + tooltip */
+function line(h=190,o={}){
+  const w=328,L=28,R=o.compact?10:34,T=o.compact?8:18,B=o.compact?18:24,iw=w-L-R,ih=h-T-B;
+  const x=i=>L+iw*i/16,y=v=>T+ih*(1-v/100);
+  let s=`<svg viewBox="0 0 ${w} ${h}" width="100%" class="chart" role="img" aria-label="Темп бронювання, листопад, 2024–2026">`;
+  (o.compact?[0,50,100]:[0,25,50,75,100]).forEach(t=>{s+=`<line class="grid" x1="${L}" x2="${w-R}" y1="${y(t)}" y2="${y(t)}"/><text class="ax" x="${L-6}" y="${y(t)+3.5}" text-anchor="end">${t}</text>`});
+  DATES.forEach((d,i)=>{if(i===16||(i<=(o.compact?10:12)&&i%(o.compact?5:3)===0))s+=`<text class="ax" x="${x(i)}" y="${h-5}" text-anchor="middle">${d}</text>`});
+  const xt=x(10.6);
+  s+=`<line class="today" x1="${xt}" x2="${xt}" y1="${T}" y2="${T+ih}"/>`;
+  if(!o.compact)s+=`<text class="ax" x="${xt+4}" y="${T-6}" text-anchor="start">сьогодні</text>`;
+  [2024,2025,2026].forEach(yr=>{let d='';PACE[yr].forEach((v,i)=>{if(v!=null)d+=(d?'L':'M')+x(i).toFixed(1)+' '+y(v).toFixed(1)});s+=`<path d="${d}" class="ln s${yr}"/>`});
+  if(o.cursor!=null){const c=o.cursor;s+=`<line class="cur" x1="${x(c)}" x2="${x(c)}" y1="${T}" y2="${T+ih}"/>`;[2024,2025,2026].forEach(yr=>{s+=`<circle class="dot" style="fill:var(--y${String(yr).slice(2)})" cx="${x(c)}" cy="${y(PACE[yr][c])}" r="5"/>`});}
+  else{s+=`<circle class="dot" style="fill:var(--y26)" cx="${x(10)}" cy="${y(62)}" r="5"/>`;
+    if(!o.compact)s+=`<text class="vl" x="${x(10)-8}" y="${y(62)-9}" text-anchor="end">62%</text>`;}
+  if(!o.compact){s+=`<text class="vl" x="${x(16)+6}" y="${y(68)+3.5}">68%</text><text class="vl" x="${x(16)+6}" y="${y(57)+3.5}">57%</text>`}
+  return s+'</svg>';
+}
+function pTip(c){
+  const x=28+(328-28-34)*c/16,pct=(x/328*100).toFixed(1);
+  const d=PACE[2026][c]-PACE[2025][c];
+  return `<div class="tip l" style="left:${pct}%;top:4px"><div class="d">${DATES[c]} · дата бронювання</div><div class="r"><i style="background:var(--y26)"></i><b>2026</b>&nbsp;${PACE[2026][c]}%</div><div class="r"><i style="background:var(--y25)"></i>2025&nbsp;${PACE[2025][c]}%</div><div class="r"><i style="background:var(--y24)"></i>2024&nbsp;${PACE[2024][c]}%</div><div class="d" style="margin:3px 0 0">+${d} п.п. до 2025</div></div>`;
+}
+const legendYears=()=>`<div class="legend"><span><i style="background:var(--y24)"></i>2024</span><span><i style="background:var(--y25)"></i>2025</span><span><i style="background:var(--y26)"></i>2026</span><span>┆ сьогодні, 09.11</span></div>`;
+const rbar=(x,top,bw,base,r=4)=>`M${x},${base}V${top+r}Q${x},${top} ${x+r},${top}H${x+bw-r}Q${x+bw},${top} ${x+bw},${top+r}V${base}Z`;
+function bars(h,data,prev,o={}){
+  const w=328,L=28,R=4,T=18,B=22,iw=w-L-R,ih=h-T-B,sl=iw/12,bw=16,y=v=>T+ih*(1-v/100);
+  const col=o.color||'var(--y26)';
+  let s=`<svg viewBox="0 0 ${w} ${h}" width="100%" class="chart" role="img" aria-label="Завантаженість по місяцях">`;
+  [0,50,100].forEach(t=>{s+=`<line class="grid" x1="${L}" x2="${w-R}" y1="${y(t)}" y2="${y(t)}"/><text class="ax" x="${L-6}" y="${y(t)+3.5}" text-anchor="end">${t}</text>`});
+  data.forEach((v,i)=>{const x=L+sl*i+(sl-bw)/2;
+    s+=`<path class="${i>=10?'barp':''}" style="fill:${col}" d="${rbar(x,y(v),bw,y(0))}"/>`;
+    if(prev)s+=`<line class="tick" x1="${x-2}" x2="${x+bw+2}" y1="${y(prev[i])}" y2="${y(prev[i])}"/>`;
+    s+=`<text class="ax" x="${x+bw/2}" y="${h-6}" text-anchor="middle">${MON[i]}</text>`;
+    if(i===(o.label??10))s+=`<text class="vl" x="${x+bw/2}" y="${y(v)-5}" text-anchor="middle">${v}%</text>`;});
+  return s+'</svg>';
+}
+function bTip(i,hi){
+  const sl=(328-28-4)/12,x=28+sl*i+sl/2,pct=(x/328*100).toFixed(1),v=HM[hi][i];
+  return `<div class="tip top"><div class="d">${MON[i]} 2026 · ${HOUSES[hi]}</div><div class="r"><i style="background:var(--hs${hi+1})"></i><b>${v}%</b>&nbsp;ночей зайнято</div></div>`;
+}
+function matrix(sel=null){
+  let s=`<table class="tbl" aria-label="Завантаженість: місяць × будинок"><thead><tr><th>Місяць</th><th>Усі</th>${HOUSES.map((n,i)=>`<th><span class="hb h${i+1}">${i+1}</span></th>`).join('')}</tr></thead><tbody>`;
+  MON.forEach((m,i)=>{s+=`<tr class="${i===10?'now':''}"><td class="d">${m}${i>=10?'*':''}</td>${hc(OCC[2026][i],sel!=null?'fade':'')}${HM.map((r,j)=>hc(r[i],sel!=null&&sel!==j?'fade':'')).join('')}</tr>`});
+  s+=`</tbody></table><div class="sub" style="margin-top:6px">Колонки 1–4: ${HOUSES.join(', ')}<br>* місяць ще триває: заброньовано на сьогодні</div>`;
+  return s;
+}
+const hFilter=(sel=null)=>`<div class="hf" role="group" aria-label="Фільтр будинку"><span class="all ${sel==null?'on':''}">Усі</span>${HOUSES.map((n,i)=>`<span class="${sel===i?'on':''} ${sel!=null&&sel!==i?'dim':''}"><span class="hb h${i+1}" style="border:0;height:22px;padding:0">${i+1}</span>${sel===i?n:''}</span>`).join('')}</div>`;
+const monSel=()=>`<div class="sel"><span class="ar">${ic('chevl',18)}</span><span class="m">Листопад</span><span class="ar">${ic('chev',18)}</span></div>`;
+const yearSel=()=>`<div class="seg"><b>2024</b><b>2025</b><b class="on">2026</b></div>`;
+const foot=()=>`<div class="foot"><i></i>Оновлено щойно · Booking з’являється до 15 хв</div>`;
+const period=on=>`<div class="seg">${['Сьогодні','Завтра','Цей тиждень'].map((t,i)=>`<b class="${i===on?'on':''}">${t}</b>`).join('')}</div>`;
+function rec(r,dense=false){
+  const hn=HOUSES[r.h-1];
+  if(dense)return `<div class="dense"><span class="hb h${r.h}">${r.h}</span><div class="a"><b>${hn} · ${r.name}</b><span>${r.t==='in'?'заїзд':'виїзд'} · ${r.from} → ${r.to} · ${r.n} ноч. · ${r.g??'—'} гост. · ${r.src}</span></div>${ic('chev',18)}</div>`;
+  return `<div class="rc"><div class="t1"><span class="tag ${r.t}">${ic(r.t==='in'?'arin':'arout',14)}${r.t==='in'?'Заїзд':'Виїзд'}</span><span class="hb h${r.h}">${r.h}</span><span class="hn">${hn}</span><span class="chip mute" style="margin-left:auto">${r.src}</span></div>
+  <div class="dt"><span>Заїзд <b>${r.from}</b></span><span>Виїзд <b>${r.to}</b></span><span><b>${r.n}</b> ноч. · <b>${r.g??'—'}</b> гост.</span></div>
+  <div class="who"><div><strong>${r.name}</strong><span>${r.ph}</span></div><span class="call">${ic('phone',16)}Подзвонити</span></div>
+  ${r.due?`<div class="due">${ic('alert',16)}Не доплачено офлайн</div>`:''}
+  ${r.gc?`<div class="cm"><small>Коментар гостя</small>${r.gc}</div>`:''}
+  ${r.ac?`<div class="cm adm"><small>Коментар адміна</small>${r.ac}</div>`:''}</div>`;
+}
+const NAV=[['home','Огляд','home'],['pace','Темп','trend'],['months','Місяці','grid'],['arr','Заїзди','swap']];
+const nav=act=>`<div class="navD">${NAV.map(([id,l,i])=>`<a class="${id===act?'on':''}">${ic(i,20)}<b>${l}</b></a>`).join('')}</div>`;
+const sb=()=>`<div class="sb"><span>9:41</span><span><i></i><i></i></span></div>`;
+const phone=(act,body,nonav)=>`<div class="phone vD${DARK?' dark':''}">${sb()}<div class="body">${body}</div>${nonav?'':nav(act)}</div>`;
+const fig=(h,cap)=>`<figure class="fig">${h}<figcaption>${cap}</figcaption></figure>`;
+
+/* ---------- screens ---------- */
+const loginS=()=>phone('',`<div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:22px"><div><div style="display:flex;gap:6px;margin-bottom:16px">${[1,2,3,4].map(i=>`<span class="hb h${i}" style="width:28px;height:28px;font-size:13px">${i}</span>`).join('')}</div><div class="ttl" style="font-size:30px">Простір</div><div class="sub" style="margin-top:4px">Чотири будинки. Одна панель.</div></div><div class="field"><label>Логін</label><div class="inp">owner</div></div><div class="field"><label>Пароль</label><div class="inp">••••••••<small>Показати</small></div></div><div class="btn">Увійти</div></div>`,true);
+const menuHtml=`<div class="menu"><div class="mi">${ic('refresh',18)}Оновити</div><div class="mi">${ic('lock',18)}Вийти з акаунта</div><div class="ms">Цей пристрій: Pixel 8<br>Сеанс дійсний до 09.12.2026</div></div>`;
+const homeS=(menu)=>phone('home',`<div class="appbar"><div><div class="sub">Всі будинки</div><div class="ttl">Листопад 2026</div></div><span style="display:flex;gap:8px"><span class="ibtn">${ic('refresh',20)}</span><span class="ibtn">${ic('dots',20)}</span></span></div>
+ <div class="card avg">${ring(62,86,10,'var(--accent)')}<div style="min-width:0"><div class="lbl">Середня завантаженість</div><div style="font-size:15px;font-weight:600;margin:2px 0 6px">74 з 120 ночей</div><span class="chip good">▲ +12 п.п. до 2025 на 06.11</span></div></div>
+ <div class="grid2">${HOUSES.map((n,i)=>`<div class="htile"><div class="top"><span class="hb h${i+1}">${i+1}</span>${n}</div><div class="rg"><span class="pc">${HM[i][10]}%</span>${ring(HM[i][10],40,6,`var(--hs${i+1})`)}</div><span class="sub">${['заїзд сьогодні','виїзд сьогодні','наступний заїзд 10.11','заїзд сьогодні'][i]}</span></div>`).join('')}</div>
+ <div class="card"><div class="cardh">Темп бронювання<span>Листопад</span></div>${line(120,{compact:true})}</div>${foot()}${menu?menuHtml:''}`);
+const paceS=(cursor)=>phone('pace',`${monSel()}<div class="card"><div class="chartbox">${cursor!=null?pTip(cursor):''}${line(200,{cursor})}</div>${legendYears()}</div>
+ <div class="sum"><div><small><i style="background:var(--y24)"></i>2024</small><b>57%</b><em>підсумок</em></div><div><small><i style="background:var(--y25)"></i>2025</small><b>68%</b><em>підсумок</em></div><div><small><i style="background:var(--y26)"></i>2026</small><b>62%</b><em>на сьогодні</em></div></div>
+ <div class="card"><div class="cardh">Таблиця<span>% заброньованих ночей</span></div><table class="tbl"><thead><tr><th>Дата</th><th>2024</th><th>2025</th><th>2026</th></tr></thead><tbody>${DATES.map((d,i)=>`<tr class="${i===10?'now':''}"><td class="d">${d}</td>${hc(PACE[2024][i])}${hc(PACE[2025][i])}${hc(PACE[2026][i])}</tr>`).join('')}<tr class="tot"><td class="d">Підсумок</td>${hc(57)}${hc(68)}<td class="nil" style="opacity:1">62*</td></tr></tbody></table><div class="sub" style="margin-top:6px">* на сьогодні. «—» означає майбутню дату.</div></div>${foot()}`);
+const monthsS=()=>phone('months',`${yearSel()}${hFilter()}<div class="card"><div class="row" style="justify-content:space-between"><div><div class="lbl">Середній за 2026, завершені місяці</div><div style="font-size:30px;font-weight:600">56%</div></div><div style="text-align:right"><span class="chip mute">2025 за рік: 56%</span><div class="sub" style="margin-top:6px">2024 за рік: 51%</div></div></div></div>
+ <div class="card"><div class="cardh">Будинок × місяць</div>${matrix()}</div>
+ <div class="card"><div class="cardh">По місяцях<span>% зайнятих ночей</span></div>${bars(170,OCC[2026],OCC[2025],{color:'var(--y26)'})}<div class="legend"><span><i class="sq" style="background:var(--y26)"></i>2026</span><span><i style="background:var(--ink);height:2px;width:12px"></i>2025, той самий місяць</span></div></div>${foot()}`);
+const monthsHouseS=()=>phone('months',`${yearSel()}${hFilter(0)}<div class="card"><div class="cardh"><span class="row" style="gap:6px;color:var(--ink);font-size:14px;font-weight:600"><span class="hb h1">1</span>${HOUSES[0]} · 2026</span><span>% зайнятих ночей</span></div><div class="chartbox">${bTip(6,0)}${bars(190,HM[0],null,{color:'var(--hs1)',label:6})}</div><div class="legend"><span><i class="sq" style="background:var(--hs1)"></i>2026, ${HOUSES[0]}</span><span>порівняння з минулими роками лише для всіх будинків</span></div></div>
+ <div class="card"><div class="cardh">Усі будинки<span>${HOUSES[0]} виділено</span></div>${matrix(0)}</div>${foot()}`);
+const arrS=()=>phone('arr',`${period(0)}${hFilter()}${rec(RECS[1])}${rec(RECS[0])}${rec(RECS[2])}${foot()}`);
+const arrWeekS=()=>phone('arr',`${period(2)}${hFilter(3)}<div class="day">Сьогодні · пн 9</div>${rec(RECS[2],true)}<div class="day">Середа · 11</div><div class="dense"><span class="hb h4">4</span><div class="a"><b>${HOUSES[3]} · Ірина Бондар</b><span>виїзд · 09.11 → 11.11 · 2 ноч. · — гост. · Адмін</span></div>${ic('chev',18)}</div><div class="day">Субота · 14</div><div class="dense"><span class="hb h4">4</span><div class="a"><b>${HOUSES[3]} · Максим Остапчук</b><span>заїзд · 14.11 → 16.11 · 2 ноч. · 2 гост. · Airbnb</span></div>${ic('chev',18)}</div>${foot()}`);
+const arrEmptyS=()=>phone('arr',`${period(0)}${hFilter(2)}<div class="card center" style="margin-top:12px"><span class="ibtn">${ic('cal',24)}</span><b>Сьогодні заїздів немає</b><div class="sub">Для ${HOUSES[2]} найближчий заїзд завтра, 10.11, Тарас Литвин.</div><div class="btn ghost sm">Показати тиждень</div></div>${foot()}`);
+const statesS=()=>phone('',`
+ <div class="stl">Помилка входу</div><div class="field"><div class="inp err">owner</div><div class="inp err">••••••</div><div class="errmsg">${ic('alert',14)}Невірний логін або пароль. Перевірте дані й спробуйте ще раз.</div></div>
+ <div class="stl">Забагато спроб входу</div><div class="field"><div class="errmsg">${ic('alert',14)}Забагато спроб. Спробуйте ще раз за хвилину.</div><div class="btn ghost">Спробувати за 0:42</div></div>
+ <div class="stl">Сеанс закінчився</div><div class="card"><div class="row">${ic('lock',22)}<div><b>Потрібно увійти знову</b><div class="sub">Сеанс завершено. Повернемо вас на екран входу.</div></div></div><div class="btn sm" style="margin-top:10px">Увійти</div></div>
+ <div class="stl">Завантаження</div><div class="card"><div class="sk" style="height:12px;width:40%"></div><div class="sk" style="height:46px;width:60%;margin:10px 0"></div><div class="sk" style="height:90px"></div></div>
+ <div class="stl">Немає мережі</div><div class="card center"><span class="ibtn">${ic('wifioff',24)}</span><b>Немає з’єднання</b><div class="sub">Показуємо дані станом на 09:12.</div><div class="btn ghost sm">Повторити</div></div>
+ <div class="stl">Потягнути вниз, щоб оновити</div><div class="center"><span class="ibtn spin">${ic('refresh',20)}</span><div class="sub">Оновлюємо…</div></div>${foot()}`,true);
+
+const SCREENS=[['Вхід',loginS],['Огляд',()=>homeS()],['Меню: вихід з акаунта',()=>homeS(true)],['Темп бронювання',()=>paceS()],['Темп: дотик до графіка',()=>paceS(10)],['Завантаженість',monthsS],['Місяці: фільтр будинку + підказка',monthsHouseS],['Заїзди й виїзди: сьогодні',arrS],['Тиждень, фільтр будинку 4',arrWeekS],['Порожній день, фільтр будинку 3',arrEmptyS],['Стани й помилки',statesS]];
+
+const TABS=[['light','Світла тема'],['dark','Темна тема']];
+function show(id){
+  DARK=id==='dark';
+  document.getElementById('stage').innerHTML=SCREENS.map(([c,f])=>fig(f(),c)).join('');
+  document.querySelectorAll('#tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.id===id));
+  const sw=(arr)=>arr.map(([c,n])=>`<span><i style="background:${c}"></i>${n}</span>`).join('');
+  document.getElementById('spec').innerHTML=DARK?
+   `<div><h3>Будинки</h3><div class="sw">${sw([['#34A474','1 Prostir #1'],['#5580E0','2 Prostir #2'],['#D2771F','3 Prostir #3'],['#B658B0','4 Prostir #4']])}</div></div><div><h3>Роки</h3><div class="sw">${sw([['#7C82EE','2026'],['#22A5B6','2025'],['#BE8522','2024']])}</div></div><div><h3>Перевірка</h3><p>Темна палітра пройшла перевірку на яскравість, насиченість, дальтонізм і контраст з поверхнею.</p></div>`:
+   `<div><h3>Будинки</h3><div class="sw">${sw([['#2E8B63','1 Prostir #1'],['#3A6FD8','2 Prostir #2'],['#C96A0C','3 Prostir #3'],['#A34A8C','4 Prostir #4']])}</div><p style="margin-top:8px">Колір завжди йде разом із числом.</p></div><div><h3>Роки</h3><div class="sw">${sw([['#4B50C8','2026 суцільна товста'],['#0A8DA8','2025 суцільна'],['#B7791F','2024 пунктир']])}</div></div><div><h3>Перевірка</h3><p>Палітри пройшли перевірку на яскравість, насиченість, дальтонізм і контраст. Найслабше місце: синій і зелений при тританопії, тому будинки завжди мають число.</p></div>`;
+}
+document.getElementById('tabs').innerHTML=TABS.map(([id,l])=>`<button role="tab" data-id="${id}" aria-selected="false">${l}</button>`).join('');
+document.getElementById('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(b)show(b.dataset.id)});
+show('light');
+</script>
